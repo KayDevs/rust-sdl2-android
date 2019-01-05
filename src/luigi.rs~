@@ -1,0 +1,48 @@
+use sprite::{Sprite, Render};
+use entity::{Entity, GameState};
+
+use data;
+
+pub struct Luigi {
+    health: u8,
+    sprite: Sprite,
+}
+
+impl Render for Luigi {
+    fn get_sprites(&self) -> Vec<&Sprite> {
+        return vec![&self.sprite];
+    }
+}
+
+impl Entity for Luigi {
+    fn new() -> Self {
+        let mut l = Luigi{health: 255, sprite: Sprite::new(data::LUIGI)};
+        l.sprite.w = 16; //400
+        l.sprite.h = 16; //315
+        return l;
+    }
+    fn tick(&mut self, gs: &GameState) {
+        if gs.primary {
+            self.sprite.flip_v = true;
+        } else {
+            self.sprite.flip_v = false;
+        }
+        if gs.up {
+            self.sprite.y -= 1;
+        }
+        if gs.down {
+            self.sprite.y += 1;
+        }
+        if gs.left {
+            self.sprite.x -= 1;
+            self.sprite.anim_index += 0.25;
+            self.sprite.flip_h = true;
+        } else if gs.right {
+            self.sprite.x += 1;
+            self.sprite.anim_index += 0.25;
+            self.sprite.flip_h = false;
+        } else {
+            self.sprite.anim_index = 0.0;
+        }
+    }
+}

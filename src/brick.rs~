@@ -1,0 +1,57 @@
+use sprite::{Render, Sprite};
+use entity::{Entity, GameState};
+use hitbox::{HitBox, Collide, CollisionEvent};
+
+use data;
+
+pub struct Brick {
+    sprite: Sprite,
+}
+
+impl Render for Brick {
+    fn get_sprite(&mut self) -> &mut Sprite {
+        return &mut self.sprite;
+    }
+}
+
+impl Entity for Brick {
+    fn new() -> Self {
+        let mut b = Brick{sprite: Sprite::new(data::BRICK)};
+        b.sprite.w = 16.0;
+        b.sprite.h = 16.0;
+        return b;
+    }
+    fn tick(&mut self, gs: &GameState) {
+        //nothing to be done :o
+    }
+}
+
+impl Collide for Brick {
+    fn get_hitbox(&self) -> HitBox {
+        return HitBox{x: self.sprite.x, y: self.sprite.y, w: self.sprite.w, h: self.sprite.h};
+    }
+    fn collision(&self, other: HitBox) -> CollisionEvent {
+        // [ -[- ] - ]
+        let overlap_x: f64;
+        if other.x < self.get_hitbox().x {
+            overlap_x = (other.x + other.w) - self.get_hitbox().x;
+        } else {
+            overlap_x = other.x - (self.get_hitbox().x + self.get_hitbox().w);
+        }
+        let overlap_y: f64;
+        if other.y < self.get_hitbox().y {
+            overlap_y = (other.y + other.h) - self.get_hitbox().y;
+        } else {
+            overlap_y = other.y - (self.get_hitbox().y + self.get_hitbox().h);
+        }
+
+        if overlap_y.abs() > overlap_x.abs() {
+            return CollisionEvent{impact: 0, direction: (overlap_x, 0.0)};
+        } else {
+            return CollisionEvent{impact: 0, direction: (0.0, overlap_y)};
+        }
+    }
+    fn handle_collision(&mut self, ce: CollisionEvent) {
+        //do nothing
+    }
+}

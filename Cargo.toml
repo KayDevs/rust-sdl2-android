@@ -1,0 +1,17 @@
+[package]
+name = "sdl2test"
+version = "0.1.0"
+authors = ["kay"]
+
+[dependencies]
+sdl2 = { version = "0.31.0" }#, features = ["bundled"] }#, "static-link"] }
+libc = "*"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
+
+[lib]
+crate_type = ["cdylib", "rlib"]
+name = "sdl_main"
+path = "src/sdl_main.rs"

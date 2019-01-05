@@ -1,0 +1,16 @@
+-install android studio
+-install platform 19 + NDK
+-d/l SDL2 'android-project' template
+-make necessary modifications to make it work with platform 19
+-set compileSdkVersion and targetSdkVersion to 22 to get rid of transformNativeLibsWithStripDebugSymbolForDebug bug
+-move 'SDL' directory into 'android-project/app/jni' (delete all the android-project, android-project-ant, Xcode, WinRT, etc. project folders)
+-open up SDLActivity.java and SDLControllerManager.java and comment out all the _API26 and _API24 code bc we don't support api19+ yet
+-run gradlew
+-rustup add target armv7-linux-androideabi
+-use make_standalone_toolchain.py --arch arm --api 19 --install-dir ./NDK
+-edit .cargo/config to tell armv7-linux-androideabi target where the NDK tools are
+-set linker="./NDK/bin/arm-linux-androideabi-gcc"
+-edit 'android-project/app/jni/src/Android.mk' and comment out the "YourSourceHere.c" bit
+-use ndk-build to compile libSDL2.so
+-point cargo to libSDL2.so, build the library, then copy the library over to libmain.so
+-finally run gradlew installDebug
