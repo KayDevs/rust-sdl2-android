@@ -1,5 +1,0 @@
-pub trait Entity {
-    fn new() -> Self where Self: Sized;
-    fn tick(&mut self);
-    //fn update(&mut self);
-}
